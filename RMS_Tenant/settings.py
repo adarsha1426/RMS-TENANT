@@ -52,6 +52,7 @@ TENANT_APPS = [
     "users",
     "rest_framework_simplejwt",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -119,8 +120,12 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 WSGI_APPLICATION = "RMS_Tenant.wsgi.application"
 
@@ -182,3 +187,12 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 TENANT_MODEL = "tenants.ResturantTenant"
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Resturant Management System",
+    "DESCRIPTION": "RMS is a simple platform where you can have your own resturant website where you can manage staff ,customers along with the stock .",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
+}
