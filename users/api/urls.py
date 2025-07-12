@@ -4,7 +4,18 @@ from rest_framework_simplejwt.views import (
 )
 from django.urls import path
 
+from users.api.views import (
+    UserCreateView,
+    UserListView,
+    UserProfileListCreateView,
+    UserProfileRetrieveUpdateView,
+)
+
 urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("", UserListView.as_view()),
+    path("profile/create", UserProfileListCreateView.as_view()),
+    path("create/", UserCreateView.as_view()),
+    path("profile/<int:id>/", UserProfileRetrieveUpdateView.as_view()),
 ]
