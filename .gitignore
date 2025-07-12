@@ -82,6 +82,8 @@ celerybeat-schedule.*
 # Environments
 .env
 .venv
+linuvenv
+linuvenv/
 env/
 venv/
 ENV/
@@ -103,3 +105,7 @@ venv.bak/
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+
+client_secret_116899823962-f5bjjrdcfs1blr6mmva376oc7mqchoq3.apps.googleusercontent.com.json
+
+buildx
