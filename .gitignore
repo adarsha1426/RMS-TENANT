@@ -90,6 +90,7 @@ ENV/
 env.bak/
 venv.bak/
 
+*es.txt
 
 # Sublime Text
 *.tmlanguage.cache
@@ -109,3 +110,4 @@ venv.bak/
 client_secret_116899823962-f5bjjrdcfs1blr6mmva376oc7mqchoq3.apps.googleusercontent.com.json
 
 buildx
+client.js
