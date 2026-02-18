@@ -1,18 +1,31 @@
+from django.forms import ValidationError
 from rest_framework import serializers
-from tenants.models import ResturantTenant
+from tenants.models import Domain, ResturantTenant
 
 
-class TenantSerialzer(serializers.ModelSerializer):
+class TenantSerializer(serializers.ModelSerializer):
+    domain_name = serializers.CharField(max_length=50, write_only=True)
+
     class Meta:
         model = ResturantTenant
-        fields = ["name", "created", "domain", "logo", "description", "on_trial"]
+        fields = [
+            "id",
+            "schema_name",
+            "name",
+            "logo",
+            "description",
+            "on_trial",
+            "domain_name",
+        ]
 
     def create(self, validated_data):
-        name = validated_data.pop("name")
-        domain = validated_data.pop("domain")
-        logo = validated_data.pop("logo", None)
-        description = validated_data.pop("description", None)
-        on_trail = validated_data.pop("on_trial")
-        resturant_tenant = ResturantTenant.objects.create(**validated_data)
-        resturant_tenant.save()
-        return resturant_tenant
+        domain_name = validated_data.pop("domain_name", None)
+        if not ResturantTenant.objects.filter(
+            schema_name=validated_data["schema_name"]
+        ).exists():
+            tenant = ResturantTenant.objects.create(**validated_data)
+
+            Domain.objects.create(domain=domain_name, tenant=tenant, is_primary=True)
+        else:
+            raise ValidationError(f"Schema Name already exists")
+        return tenant
