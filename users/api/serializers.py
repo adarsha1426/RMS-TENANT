@@ -1,9 +1,51 @@
 from rest_framework import serializers
 from users.models import CustomUser, UserProfile
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["username"] = user.username
+        token["password"] = user.password
+        token["role"] = user.role
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["id"] = self.user.id
+        data["username"] = self.user.username
+        data["role"] = self.user.role
+        return data
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        username = attrs.get("username")
+        password = attrs.get("password")
+        if not username or not password:
+            raise serializers.ValidationError("Invalid Username or Password")
+        else:
+            user = authenticate(
+                username=attrs.get("username"), password=attrs.get("password")
+            )
+            if not user:
+                raise serializers.ValidationError("Invalid Username or password")
+            return attrs
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = CustomUser
         fields = [
@@ -16,13 +58,27 @@ class UserCreationSerializer(serializers.ModelSerializer):
             "role",
         ]
 
-    extra_kwargs = {"password": {"write_only": True}}
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = CustomUser(**validated_data)
+        user.set_password(password)  # securely hashes the password
+        user.save()
+        return user
 
 
 class UserProfileCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = "__all__"
+
+    def to_representation(self, instance):
+        return {
+            "id": instance.id,
+            "image": (instance.image.url if instance.image else ""),
+            "address": instance.address or "",
+            "date_of_birth": instance.date_of_birth or "",
+            "gender": instance.gender or "",
+        }
 
 
 class UserProfileRetrieveUpdateSerializer(serializers.ModelSerializer):
@@ -73,5 +129,8 @@ class UserProfileRetrieveUpdateSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep["first_name"] = instance.user.first_name.capitalize()
         rep["last_name"] = instance.user.last_name.capitalize()
-        rep["middle_name"] = instance.user.midlle_name if instance.user.middle else ""
+        rep["middle_name"] = (
+            instance.user.midlle_name if instance.user.middle_name else ""
+        )
+        rep["full_name"] = instance.get_full_name
         return rep

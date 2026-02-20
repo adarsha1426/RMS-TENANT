@@ -24,17 +24,17 @@ class CustomUserModel(BaseUserManager):
             raise ValueError({"error": "Password is required"})
         if not email:
             raise ValueError({"error": "Email is required"})
-        email = email.normalize_email(email)
+        email = self.normalize_email(email)
         user = self.model(
             username=username,
-            password=password,
             role=role,
             email=email,
             first_name=first_name,
             middle_name=middle_name,
             last_name=last_name,
+            **kwargs,
         )
-        user.set_password(raw_password=password)
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -55,7 +55,6 @@ class CustomUser(AbstractBaseUser, CommonModel):
     first_name = models.CharField(max_length=200)
     middle_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -68,8 +67,6 @@ class CustomUser(AbstractBaseUser, CommonModel):
     auth_provider = models.CharField(
         max_length=20,
         choices=AuthProvider.choices,
-        null=False,
-        blank=False,
         default="email",
     )
 
@@ -77,8 +74,17 @@ class CustomUser(AbstractBaseUser, CommonModel):
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"
 
+    class Meta:
+        db_table = "custom_user"
+
     def __str__(self):
         return f"{self.username} has role {self.role}"
+
+    def has_perm(self, perm, obj=None):
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        return self.is_superuser
 
     @property
     def get_full_name(self):
@@ -91,7 +97,7 @@ class UserProfile(CommonModel):
     user = models.OneToOneField(
         CustomUser, unique=True, related_name="profile", on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to="profile_images/", blank=True, null=True)
+    image = models.ImageField(upload_to="media/profile_images/", blank=True, null=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
@@ -101,3 +107,14 @@ class UserProfile(CommonModel):
         blank=True,
         null=True,
     )
+
+    @property
+    def get_full_name(self):
+        if self.user.first_name and self.user.last_name:
+            return f"{self.user.first_name} {self.user.last_name}"
+        elif self.user.first_name and self.user.middle_name:
+            return (
+                f"{self.user.first_name} {self.user.middle_name} {self.user.last_name}"
+            )
+        else:
+            return ""
