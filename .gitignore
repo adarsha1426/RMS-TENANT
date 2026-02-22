@@ -13,6 +13,7 @@ media
 .idea/
 *.iws
 out/
+misc
 
 # Gradle
 .idea/gradle.xml
@@ -107,7 +108,6 @@ venv.bak/
 !.vscode/extensions.json
 .history
 
-client_secret_116899823962-f5bjjrdcfs1blr6mmva376oc7mqchoq3.apps.googleusercontent.com.json
 
 buildx
 client.js
