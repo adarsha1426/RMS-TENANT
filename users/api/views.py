@@ -37,6 +37,8 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from drf_spectacular.utils import OpenApiRequest, OpenApiResponse
 from drf_spectacular.utils import extend_schema
 
+# all auth
+
 
 @extend_schema(tags=["Login/Logout"], summary="Login View")
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -93,11 +95,6 @@ class UserCreateView(ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserCreationSerializer
     permission_classes = [permissions.AllowAny]
-
-    # def post(self, request, *args, **kwargs):
-    #     user = request.data
-
-    #     return self.create(request, *args, **kwargs)
 
 
 @extend_schema(tags=["User Profile"], summary="User Creation")
