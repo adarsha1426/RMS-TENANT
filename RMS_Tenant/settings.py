@@ -32,8 +32,10 @@ SHARED_APPS = [
 TENANT_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
+    "django.contrib.messages",
     "users",
     "menus",
+    "reservation",
     # Oauth login
     "allauth",
     "allauth.account",
@@ -190,10 +192,21 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-SOCIAL_ACCOUNT_PROVIDERS = {
-    "google": {"SCOPE": ["profile", "email"], "AUTH_PARAMS": {"access_type": "online"}}
+# SOCIAL_ACCOUNT_PROVIDERS = {
+#     "google": {"SCOPE": ["profile", "email"], "AUTH_PARAMS": {"access_type": "online"}}
+# }
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        "APP": {
+            "client_id": config("client_id"),
+            "secret": config("secret"),
+            "key": config("key"),
+        }
+    }
 }
-SOCIAL_ACCOUNT_PROVIDERS
 SPECTACULAR_SETTINGS = {
     "TITLE": "RMS",
     "DESCRIPTION": "",
