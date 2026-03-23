@@ -13,7 +13,7 @@ from utils.permissions import IsAdminUser
 
 
 # Create your views here.\
-@extend_schema(tags=["Menu-Item"], summary="Food-Item-Category")
+@extend_schema(tags=["Food-Item"], summary="Food-Item-Category")
 class FoodCategoryListCreateView(generics.ListCreateAPIView):
     queryset = FoodCategory.objects.all()
     serializer_class = FoodCategoryListCreateSerializer
@@ -24,14 +24,14 @@ class FoodCategoryListCreateView(generics.ListCreateAPIView):
         return [IsAdminUser()]
 
 
-@extend_schema(tags=["Menu-Item"])
+@extend_schema(tags=["Food-Category"])
 class FoodCategoryRetireveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
     queryset = FoodCategory.objects.all()
     serializer_class = FoodCategoryListCreateSerializer
 
 
-@extend_schema(tags=["Menu-Item"], summary="Meal-Type-Category")
+@extend_schema(tags=["Food-Item"], summary="Meal-Type-Category")
 class MealTypeListCreateView(generics.ListCreateAPIView):
     queryset = MealType.objects.all()
     serializer_class = MealTypeListCreateSeializer
