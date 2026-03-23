@@ -33,6 +33,7 @@ class TableStatusChoices(models.TextChoices):
     reserved = "reserved", "Reserved"
     completed = "completed", "Completed"
     cancelled = "cancelled", "Cancelled"
+    new = "new", "New"
 
 
 # class MealChoices(models.TextChoices):
