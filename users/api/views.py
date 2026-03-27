@@ -47,6 +47,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 @extend_schema(tags=["Login/Logout"])
 class LoginView(APIView):
+    serializer_class = LoginSerializer
     authentication_classes = []
     permission_classes = []
 
