@@ -36,8 +36,14 @@ class TableStatusChoices(models.TextChoices):
     new = "new", "New"
 
 
-# class MealChoices(models.TextChoices):
-#     breakfast = "breakfast", "BreakFast"
-#     lunch = "lunch", "Lunch"
-#     dinner = "dinner", "Dinner"
-#     all_day = "all", "All Day"
+class UnitChoices(models.TextChoices):
+    kg = "kg", "Kilogram"
+    g = "g", "Gram"
+    ltr = "ltr", "Liter"
+    pcs = "pcs", "Pieces"
+
+
+class ActionChoices(models.TextChoices):
+    IN = "in", "IN"
+    ADJUST = "adjust", "Adjust"
+    OUT = "out", "OUT"
