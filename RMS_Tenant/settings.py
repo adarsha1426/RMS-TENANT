@@ -36,6 +36,7 @@ TENANT_APPS = [
     "users",
     "menus",
     "reservation",
+    "inventory",
     # Oauth login
     "allauth",
     "allauth.account",
