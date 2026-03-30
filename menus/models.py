@@ -1,5 +1,6 @@
 from django.db import models
 
+from inventory.models import Inventory
 from utils.common_model import CommonModel
 
 
@@ -49,3 +50,13 @@ class MenuItem(CommonModel):
 
     def __str__(self):
         return self.name
+
+
+# class Recipe(CommonModel):
+#     menu = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+#     Inventory = models.Man(Inventory)
+
+#     ...
+
+#     def __str__(self):
+#         return f"{self.menu.name} "
