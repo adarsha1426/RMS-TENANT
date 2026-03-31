@@ -22,11 +22,11 @@ urlpatterns = [
         ),
     ),
     path(
-        "inventory-item",
+        "inventory-item/",
         include(
             [
                 path("", InventoryListCreateView.as_view()),
-                path("/<int:id>/update/", InventoryRetrieveUpdateDestroy.as_view()),
+                path("<int:id>/update/", InventoryRetrieveUpdateDestroy.as_view()),
             ]
         ),
     ),
