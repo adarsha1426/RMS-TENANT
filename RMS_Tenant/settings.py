@@ -58,7 +58,7 @@ DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
 
 CUSTOM_MIDDLEWARES = [
     # custom middleware
-    # "RMS_Tenant.middleware.AuthInterceptor",
+    #
 ]
 # Middlewares
 MIDDLEWARE = [
@@ -68,10 +68,12 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "RMS_Tenant.middleware.authinterceptor.AuthInterceptorMiddleware",  # custom
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "RMS_Tenant.middleware.authinterceptor.TestMiddleware",
 ] + CUSTOM_MIDDLEWARES
 
 # CORS Configuration
