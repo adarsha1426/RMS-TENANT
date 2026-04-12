@@ -153,6 +153,31 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,  # to disable the default django logger  as django has built in logger like django.request
+    # handlers are where logs are passed on
+    "handlers": {
+        "console": {  # this outputs the console terminal
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {  # this outputs the in .log file
+            "class": "logging.FileHandler",
+            "filename": "debug.log",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {  # this refers who is sending the logs
+        "django": {"handlers": ["console", "file"], "level": "INFO"},
+    },
+    "formatters": {
+        "simple": {
+            "format": "%(levelname)s %(asctime)s %(name)s %(message)s",
+        }
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
