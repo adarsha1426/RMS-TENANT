@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from menus.api.serializers import (
     FoodCategoryListCreateSerializer,
@@ -47,6 +49,7 @@ class MealTypeListCreateView(generics.ListCreateAPIView):
 
 @extend_schema(tags=["Menu-Item"], summary="Menu-Item")
 class MenuItemListCreateView(generics.ListCreateAPIView):
+
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemListCreateSerializer
 
@@ -54,6 +57,10 @@ class MenuItemListCreateView(generics.ListCreateAPIView):
         if self.request.method == "GET":
             return [permissions.IsAuthenticated()]
         return [IsAdminUser()]
+
+    @method_decorator(cache_page(60 * 15, key_prefix="menu-item-list"))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 @extend_schema(tags=["Menu-Item"], summary="Menu-Item")
