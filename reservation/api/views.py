@@ -60,19 +60,32 @@ class TableRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
 
 
-@extend_schema(tags=["Table Reserved "])
+@extend_schema(tags=["Table Reservation "])
 class TableReserveListCreateView(generics.ListCreateAPIView):
+
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
-@extend_schema(tags=["Table Reserved "])
+@extend_schema(tags=["Table Reservation "])
 class TableReserverRetireveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Reservation.objects.all()
     serializer_class = ReservationRetirieveUpdateDestroySerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
     lookup_field = "id"
+
+    def get_queryset(self):
+        table_id = self.kwargs.get("table_id")
+
+        return Reservation.objects.filter(table=table_id, id=id)
+
+    def get_object(self):
+        table_id = self.kwargs.get("table_id")
+        id = self.kwargs.get("id")
+        return Reservation.objects.filter(table=table_id, id=id)
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()

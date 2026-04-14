@@ -15,6 +15,10 @@ urlpatterns = [
         "api/",
         include(
             [
+                path(
+                    "api-auth/",
+                    include("rest_framework.urls", namespace="rest_framework"),
+                ),
                 path("user/", include("users.api.urls")),
                 path("accounts/", include("allauth.urls")),
                 path("menus/", include("menus.api.urls")),
