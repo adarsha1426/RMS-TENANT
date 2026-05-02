@@ -12,7 +12,7 @@ urlpatterns = [
     path("", TableListView.as_view()),
     path("create/", TableListCreateView.as_view()),
     path("<int:id>/", TableRetrieveUpdateDestroyView.as_view()),
-    path("", TableReserveListCreateView.as_view()),
+    path("reservation/", TableReserveListCreateView.as_view()),
     path(
         "<int:table_id>/reservation/",
         include(

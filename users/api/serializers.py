@@ -49,6 +49,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "username",
             "email",
             "first_name",
@@ -124,6 +125,7 @@ class UserProfileRetrieveUpdateSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+        return instance
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)

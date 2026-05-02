@@ -3,7 +3,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from django.views.decorators.vary import vary_on_headers
 from menus.api.serializers import (
     FoodCategoryListCreateSerializer,
     MealTypeListCreateSeializer,
@@ -58,7 +58,7 @@ class MenuItemListCreateView(generics.ListCreateAPIView):
             return [permissions.IsAuthenticated()]
         return [IsAdminUser()]
 
-    @method_decorator(cache_page(60 * 15, key_prefix="menu-item-list"))
+    @method_decorator(cache_page(60 * 15, key_prefix=f"menu-item-list"))
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
