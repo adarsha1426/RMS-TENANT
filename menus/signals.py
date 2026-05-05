@@ -13,6 +13,7 @@ def invalidate_menu_item_list(sender, instance, **kwargs):
     tenant = connection.tenant
 
     if tenant:
+        print(f"{tenant.schema_name} signal name has been called.")
         redis_service = TenantRedisService(tenant.schema_name)
         redis_service.delete("menu-item-list")
-        redis_service.delete_pattern("menu-item-list")
+        redis_service.delete_pattern("*menu-item-list*")
