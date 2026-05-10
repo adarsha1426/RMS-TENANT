@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 )
 def send_reservation_email(self, reservation_id, schema_name):
     print("TRiggered the task to send email")
+
     try:
         with schema_context(schema_name):
             reservation = Reservation.objects.get(id=reservation_id)

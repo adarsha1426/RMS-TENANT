@@ -5,6 +5,7 @@ from reservation.models import Table, Reservation
 
 from rest_framework import serializers
 from rest_framework.response import Response
+from reservation.tasks import send_reservation_email
 from users.models import CustomUser
 
 
@@ -43,7 +44,14 @@ class ReservationSerializer(serializers.Serializer):
     guests = serializers.IntegerField()
 
     def create(self, validated_data):
-        return Reservation.objects.create(**validated_data)
+        request = self.context.get("request")
+        tenant = request.tenant
+
+        reservation = Reservation.objects.create(**validated_data)
+
+        send_reservation_email.delay(reservation.id, tenant.schema_name)
+
+        return reservation
 
     def update(self, instance: Reservation, validated_data):
         table = validated_data.pop("table")
