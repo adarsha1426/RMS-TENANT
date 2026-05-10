@@ -58,9 +58,17 @@ class MenuItemListCreateView(generics.ListCreateAPIView):
             return [permissions.IsAuthenticated()]
         return [IsAdminUser()]
 
-    @method_decorator(cache_page(60 * 15, key_prefix=f"menu-item-list"))
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    # @method_decorator(cache_page(60 * 15, key_prefix=f"menu-item-list"))
+    # def get(self, request, *args, **kwargs):
+    #     return super().get(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        data = cache.get("menu-items")
+        if not data:
+            data = self.queryset
+            serializer = MenuItemListCreateSerializer(data, many=True)
+            cache.set("menu-items", serializer.data, 60 * 15)
+        return Response(serializer.data)
 
 
 @extend_schema(tags=["Menu-Item"], summary="Menu-Item")

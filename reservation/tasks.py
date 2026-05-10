@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
     retry_kwargs={
         "max_retries": 5,
         "countdown": 1 * 60,
-    },  # retry up to 2 times with 1 minutes between retries)
+    },  # retry up to 5 times with 1 minutes between retries)
 )
 def send_reservation_email(self, reservation_id, schema_name):
     print("TRiggered the task to send email")
